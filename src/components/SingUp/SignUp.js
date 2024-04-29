@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { FiLogIn } from "react-icons/fi";
+import { FaUser } from "react-icons/fa";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -39,7 +41,7 @@ export default function SignUp() {
                 className="card-header text-center text-black bg-white "
                 style={{ border: "none" }}
               >
-                <h3>Sign Up</h3>
+                <h3>Sign Up <FaUser/></h3>
                 <p>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Corrupti assumenda magnam reprehenderit ab temporibus est
@@ -77,12 +79,12 @@ export default function SignUp() {
                   </div>
 
                   <button type="submit" className="btn btn-primary">
-                    Sign Up
+                    Sign Up <FaUser/>
                   </button>
                   <br />
                   <br />
                   <h6>
-                    Alredy have account ? <Link to="/signin">Sing In</Link>
+                    Alredy have account ? <Link to="/signin">Sing In <FiLogIn/> </Link>
                   </h6>
                 </form>
               </div>

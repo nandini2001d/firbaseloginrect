@@ -265,7 +265,7 @@ export default function AllToDoList() {
                                 putmethod("Deleted", value.id);
                               }}
                             >
-                              Delete
+                              Delete 
                             </button>
                           </li>
                         </ul>

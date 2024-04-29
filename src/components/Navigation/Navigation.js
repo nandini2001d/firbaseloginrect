@@ -4,11 +4,13 @@ import { Link, useNavigate, NavLink } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { LiaStar } from "react-icons/lia";
 import { ListGroup } from "react-bootstrap";
+import { FaEdit, FaEye, FaHome } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 
 const afterLogin = [
-  { name: "Home", to: "/" },
-  { name: "Add Todo List", to: "/add" },
-  { name: "All Todo List", to: "/all" },
+  { name: "Home", to: "/" ,icone:<FaHome/>},
+  { name: "Add Todo List", to: "/add",icone:<FaEdit/> },
+  { name: "All Todo List", to: "/all" ,icone:<FaEye/> },
 ];
 
 export default function Navigation() {
@@ -30,7 +32,7 @@ export default function Navigation() {
     >
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/">
-        TODO LIST
+        <img src="logo192.webp" style={{width:"30px",height:"30px"}}/> TODO LIST
         </NavLink>
         <button
           className="navbar-toggler"
@@ -50,7 +52,7 @@ export default function Navigation() {
               return (
                 <li className="nav-item">
                   <NavLink className="nav-link" key={value.name} to={value.to}>
-                    {value.name}
+                   {value.icone} {value.name}
                   </NavLink>
                 </li>
               );
@@ -58,7 +60,7 @@ export default function Navigation() {
           </ul>
           <form className="d-flex">
             <button className="btn btn-danger" onClick={logouFun}>
-              Logout
+             <FiLogOut/> Logout
             </button>
           </form>
         </div>

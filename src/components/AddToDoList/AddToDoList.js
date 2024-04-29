@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import { useNavigate } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
 
 export default function AddToDoList() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function AddToDoList() {
                 className="card-header text-center bg-white text-dark"
                 style={{ border: "none" }}
               >
-                <h3>Todo</h3>
+                <h3><FaEdit/> Todo</h3>
                 <p>
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                   Deleniti eum asperiores provident corporis! Voluptates quia
@@ -98,7 +99,7 @@ export default function AddToDoList() {
                   </div>
 
                   <button type="submit" className="btn btn-primary w-100">
-                    ADD
+                   <FaEdit/> ADD
                   </button>
                 </form>
               </div>

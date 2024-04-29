@@ -7,6 +7,8 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { FiLogIn } from "react-icons/fi";
+import { FaUser } from "react-icons/fa";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -55,7 +57,7 @@ export default function SignIn() {
                 className="card-header text-center text-black bg-white main-header"
                 style={{ border: "none" }}
               >
-                <h3>Sign In</h3>
+                <h3>Sign In <FiLogIn/></h3>
                 <p>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Corrupti assumenda magnam reprehenderit ab temporibus est
@@ -93,7 +95,7 @@ export default function SignIn() {
                   </div>
 
                   <button type="submit" className="btn btn-primary">
-                    Sign In
+                    Sign In <FiLogIn/>
                   </button>
                   <br /><br/>
                   {/* <h5 className="mb-1">Or</h5> */}
@@ -117,7 +119,7 @@ export default function SignIn() {
                   */}
 
                 <h6>
-                  Do not have account ? <Link to="/singup">Sign Up</Link>
+                  Do not have account ? <Link to="/singup">Sign Up <FaUser/></Link>
                 </h6>
               </div>
             </div>
