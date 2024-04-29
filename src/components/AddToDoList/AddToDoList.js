@@ -17,10 +17,10 @@ export default function AddToDoList() {
 
   const data = { title, description, email };
 
-  const addtodolist = (e) => {
+  const addtodolist = async (e) => {
     e.preventDefault();
 
-    fetch("https://newone-newonetodo.onrender.com/todolists", {
+   await fetch("https://newone-newonetodo.onrender.com/todolists", {
       method: "POST",
       headers: {
         Accept: "application/json",
