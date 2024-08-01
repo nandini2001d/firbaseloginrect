@@ -30,12 +30,11 @@ export default function AllToDoList() {
   }, []);
 
   const [dataall, setDataAll] = useState([]);
-  const emmai= localStorage.getItem('email');
+  const getalldata = async() => {
+    
+    const emmai= localStorage.getItem('email');
   const sp= emmai.split('.')
   const db=getDatabase(app);
-
-  const getalldata = async() => {
-
     const newRef=ref(db,`List/Add/${sp[0]}`);
     const snapPic= await get(newRef);
 
@@ -54,7 +53,9 @@ export default function AllToDoList() {
   const [valueset, setValue] = useState("Filter By");
 
   const seachbytitle = async() => {
-
+    const emmai= localStorage.getItem('email');
+    const sp= emmai.split('.')
+    const db=getDatabase(app);
       const newRef=ref(db,`List/Add/${sp[0]}`);
       const dataquery=query(newRef,orderByChild('title'),equalTo(title))
      
@@ -74,6 +75,9 @@ export default function AllToDoList() {
 
   //const data={id,icode}
   const putmethod = async(icode, id) => {
+    const emmai= localStorage.getItem('email');
+  const sp= emmai.split('.')
+  const db=getDatabase(app);
     const newRef=ref(db,`List/Add/${sp[0]}/${id}`);
     const snapPic= await get(newRef);
         if(snapPic.exists()){
@@ -96,6 +100,9 @@ export default function AllToDoList() {
   };
 
   const filterbystatus = async(valueset) => {
+    const emmai= localStorage.getItem('email');
+  const sp= emmai.split('.')
+  const db=getDatabase(app);
     const newref=ref(db,`List/Add/${sp[0]}`)
     const dataquery=query(newref,orderByChild('status'),equalTo(valueset))
    
@@ -114,7 +121,9 @@ export default function AllToDoList() {
   };
 
   const deletemethod = async(id) => {
-   
+    const emmai= localStorage.getItem('email');
+    const sp= emmai.split('.')
+    const db=getDatabase(app);
     const newRef=ref(db,`List/Add/${sp[0]}/${id}`);
     await remove(newRef);
       getalldata();

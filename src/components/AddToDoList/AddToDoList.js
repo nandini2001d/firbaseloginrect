@@ -33,15 +33,15 @@ export default function AddToDoList() {
   const [show, setShow] = useState(false);
 
   const data = { title, description, email };
-  const emmai = localStorage.getItem("email");
-  const sp = emmai.split(".");
-  console.log(sp);
+ 
 
   const addtodolist = (e) => {
     e.preventDefault();
 
     setShow(true);
-
+     
+    const emmai = localStorage.getItem("email");
+    const sp = emmai.split(".");
     const db = getDatabase(app);
     const newRef = push(ref(db, "List/Add/" + sp[0]));
     set(newRef, {
