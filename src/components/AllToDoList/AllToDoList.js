@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import { useNavigate } from "react-router-dom";
-import { FaBeer, FaGripVertical, FaSearch, FaUserMinus } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { MdDelete } from "react-icons/md";
+import {getDatabase,ref,set,push, get, remove, Database, query, orderByChild, equalTo} from 'firebase/database'
+import { app } from "../../firebase/firebase";
 
 export default function AllToDoList() {
   const navigate = useNavigate();
@@ -10,79 +14,98 @@ export default function AllToDoList() {
 
   useEffect(() => {
     if (!localStorage.getItem("email")) {
+      toast.info("Plz sing-in first!");
       navigate("/signin");
     }
 
-    if (title === "") {
-      getalldata();
-    } else if (title) {
-      seachbytitle();
+    try {
+      if (title === "") {
+        getalldata();
+      } else if (title) {
+        seachbytitle();
+      }
+    } catch (error) {
+      toast.error("Somthing wents wrong!,logout and login again");
     }
   }, []);
 
   const [dataall, setDataAll] = useState([]);
+  const emmai= localStorage.getItem('email');
+  const sp= emmai.split('.')
+  const db=getDatabase(app);
 
-  const getalldata = async () => {
-    await fetch(
-      `https://newone-newonetodo.onrender.com/todolists/email/${localStorage.getItem("email")}`
-    )
-      .then((value) => {
-        value.json().then((result) => {
-          setDataAll(result);
+  const getalldata = async() => {
+
+    const newRef=ref(db,`List/Add/${sp[0]}`);
+    const snapPic= await get(newRef);
+
+    if(snapPic.exists()){
+    const mayData=snapPic.val();
+       const targetObject=Object.keys(mayData).map((myid)=>{
+            return{
+                ...mayData[myid],
+                id:myid
+            }
         });
-      })
-      .catch((errer) => {
-        console.log(errer);
-      });
+        setDataAll(targetObject);
+    }
   };
 
   const [valueset, setValue] = useState("Filter By");
 
-  const seachbytitle = async () => {
-    await fetch(`https://newone-newonetodo.onrender.com/todolists/title/${title}`)
-      .then((value) => {
-        value.json().then((result) => {
-          setDataAll(result);
-        });
-      })
-      .catch((errer) => {
-        console.log(errer);
-        getalldata();
-      });
+  const seachbytitle = async() => {
+
+      const newRef=ref(db,`List/Add/${sp[0]}`);
+      const dataquery=query(newRef,orderByChild('title'),equalTo(title))
+     
+      const snapPic= await get(dataquery);
+      if(snapPic.exists()){
+          setDataAll(Object.values(snapPic.val()));
+      }
+      else{
+         if(title===""){
+          getalldata();
+         }
+         else{
+          setDataAll([])
+         }
+      }
   };
 
   //const data={id,icode}
-  const putmethod = async (icode, id) => {
-    await fetch(
-      `https://newone-newonetodo.onrender.com/todolists/status/${id}?id=${id}&status=${icode}`,
-      {
-        method: "PUT",
-      }
-    )
-      .then((value) => {
-        value.json().then((result) => {
-          getalldata();
-        });
-      })
-      .catch((errer) => {
-        console.log(errer);
-      });
+  const putmethod = async(icode, id) => {
+    const newRef=ref(db,`List/Add/${sp[0]}/${id}`);
+    const snapPic= await get(newRef);
+        if(snapPic.exists()){
+            const targetObject=snapPic.val();
+            set(newRef,{
+                title:targetObject.title,
+                email:localStorage.getItem('email'),
+                description:targetObject.description,
+                status:icode
+            }).then(()=>{
+                toast.success("Data updated successfully");
+                getalldata();
+            }).catch((errer)=>{
+              toast.error("errer");
+            })
+        }
+        else{
+            toast.error("errer");
+        }
   };
 
-  const filterbystatus = async (valueset) => {
-    await fetch(
-      `https://newone-newonetodo.onrender.com/todolists/status/${valueset}/${localStorage.getItem(
-        "email"
-      )}`
-    )
-      .then((value) => {
-        value.json().then((result) => {
-          setDataAll(result);
-        });
-      })
-      .catch((errer) => {
-        console.log(errer);
-      });
+  const filterbystatus = async(valueset) => {
+    const newref=ref(db,`List/Add/${sp[0]}`)
+    const dataquery=query(newref,orderByChild('status'),equalTo(valueset))
+   
+    const snapPic= await get(dataquery);
+    if(snapPic.exists()){
+        setDataAll(Object.values(snapPic.val()));
+    }
+    else{
+      setDataAll([]);
+    }
   };
 
   const allfuc = () => {
@@ -90,12 +113,20 @@ export default function AllToDoList() {
     getalldata();
   };
 
-  const addtospecific = () => {};
+  const deletemethod = async(id) => {
+   
+    const newRef=ref(db,`List/Add/${sp[0]}/${id}`);
+    await remove(newRef);
+      getalldata();
+      toast.success("Data delete successfully");
+
+  };
+
   return (
     <>
       <Navigation />
       <div className="container mt-4">
-        <h3>ToDO List</h3>
+        <h3>TODO List</h3>
         <div className="row mt-4">
           <div className="col-md-6 col-sm-12">
             <form
@@ -124,20 +155,23 @@ export default function AllToDoList() {
             </form>
           </div>
           <div className="col-md-6 col-sm-12 mt-3">
-            <ul style={{
+            <ul
+              style={{
                 listStyle: "none",
                 padding: "5px 20px",
                 float: "right",
                 border: "1px solid black",
                 width: "180px",
-              }} >
+              }}
+            >
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle"
                   id="navbarDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false">
+                  aria-expanded="false"
+                >
                   {valueset}
                 </button>
 
@@ -215,6 +249,18 @@ export default function AllToDoList() {
                       >
                         {value.status}
                       </h6>
+                      {value.status === "Deleted" ? (
+                        <button
+                          className="btn btn-danger text-white"
+                          onClick={() => {
+                            deletemethod(value.id);
+                          }}
+                        >
+                          Delete Permanatly <MdDelete />
+                        </button>
+                      ) : (
+                        ""
+                      )}
                     </div>
 
                     <ul
@@ -265,7 +311,7 @@ export default function AllToDoList() {
                                 putmethod("Deleted", value.id);
                               }}
                             >
-                              Delete 
+                              Delete
                             </button>
                           </li>
                         </ul>

@@ -1,11 +1,10 @@
-import { signOut } from "firebase/auth";
+import {signOut } from "firebase/auth";
 import React from "react";
-import { Link, useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
-import { LiaStar } from "react-icons/lia";
-import { ListGroup } from "react-bootstrap";
 import { FaEdit, FaEye, FaHome } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const afterLogin = [
   { name: "Home", to: "/" ,icone:<FaHome/>},
@@ -17,12 +16,11 @@ export default function Navigation() {
   const navigate = useNavigate();
   const logouFun = () => {
     signOut(auth).catch((erre) => {
-      console.log(erre);
     });
 
     localStorage.removeItem("email");
     navigate("/signin");
-    alert("Logout Successfully");
+    toast.success("Logout Successfully");
   };
 
   return (
@@ -48,9 +46,9 @@ export default function Navigation() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {afterLogin.map((value) => {
+            {afterLogin.map((value,id) => {
               return (
-                <li className="nav-item">
+                <li className="nav-item" key={id}>
                   <NavLink className="nav-link" key={value.name} to={value.to}>
                    {value.icone} {value.name}
                   </NavLink>

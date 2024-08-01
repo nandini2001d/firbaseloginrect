@@ -1,39 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import {
-  signInWithEmailAndPassword
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FiLogIn } from "react-icons/fi";
 import { FaUser } from "react-icons/fa";
-import { toast } from "react-toastify";
 
-export default function SignIn() {
-
-  useEffect(()=>{
-    if (localStorage.getItem("email")) {
-      navigate("/");
-      toast.info("Plz login logout first!");
-    }
-  },[])
-
+export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginfuct = async (e) => {
     e.preventDefault();
+      
+        await fetch(`https://newone-newonetodo.onrender.com/login/${email}/${password}`).then((value)=>{
+        value.json().then((result)=>{
+          
+          localStorage.setItem("email", result.email);
+          navigate("/");
+          alert("singIn Sucessfully");
 
-    try {
-      const login = await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem("email", login.user.email);
-      navigate("/");
-      toast.success("Sing-In Successfully!");
-    } catch (error) {
-      toast.error("Email Id Or password Wrong!");
-    }
-  };
+        }).catch((erre)=>{
+          alert("Email id or password wrong");
+       })
+      })
+    };
+
   
   // const povider = new GoogleAuthProvider();
   // const singinwithgoogleaccout = async () => {
@@ -133,7 +130,7 @@ export default function SignIn() {
           </div>
 
           <div className="col-lg-7 col-md-12  text-right">
-            <img src="/img/bg.png" alt="sign-in img" style={{ width: "100%", height: "100vh" }} />
+            <img src="/img/bg.png" style={{ width: "100%", height: "100vh" }} />
           </div>
         </div>
       </div>

@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import Navigation from "../Navigation/Navigation";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem("email")) {
+      toast.info("Plz sing-in first!");
       navigate("/signin");
     }
   }, []);

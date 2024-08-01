@@ -1,36 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FiLogIn } from "react-icons/fi";
 import { FaUser } from "react-icons/fa";
-import { toast } from "react-toastify";
 
-export default function SignUp() {
-
-  const navigate=useNavigate();
-
-  useEffect(()=>{
-    if (localStorage.getItem("email")) {
-      navigate("/");
-      toast.info("Plz login logout first!");
-    }
-  },[])
-
+export default function Registration() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate=useNavigate();
 
+  const data={email,password};
   const loginfuct = async (e) => {
     e.preventDefault();
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("Sing-Up Sucessfully Plz Sign-In!");
-      navigate('/signin')
-      
-    } catch (error) {
-      toast.error("Email id is already registerd!");
-    }
+    await fetch(`https://newone-newonetodo.onrender.com/register`,{
+        method:"POST",
+        headers:{
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body:JSON.stringify(data)
+    }).then((value)=>{
+        value.json().then((result)=>{
+            alert("Sing-Up Sucessfully Plz Sign-In");
+          navigate('/signin')
+        }).catch((erre)=>{
+            alert("email id is already registerd");
+        })
+    })
   };
 
   return (
@@ -103,7 +101,7 @@ export default function SignUp() {
           </div>
 
           <div className="col-lg-7 col-md-12 text-right">
-            <img src="/img/bg.png" alt="sign-up img" style={{ width: "100%", height: "100vh" }} />
+            <img src="/img/bg.png" style={{ width: "100%", height: "100vh" }} />
           </div>
         </div>
       </div>

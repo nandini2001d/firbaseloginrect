@@ -6,16 +6,18 @@ import Home from "./components/Home/Home";
 import AddToDoList from "./components/AddToDoList/AddToDoList";
 import AllToDoList from "./components/AllToDoList/AllToDoList";
 import PageErrer from "./components/PageErrer/PageErrer";
+import Login from "./components/LoginRegister/Login";
+
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/singup",
-      element: <SignUp />,
+      element: <SignUp/>,
     },
     {
       path: "/signin",
-      element: <SignIn />,
+      element: <SignIn/>,
     },
     {
       path: "/",

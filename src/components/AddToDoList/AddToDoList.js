@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
+import { toast } from "react-toastify";
+import {getDatabase,ref,set,push, get, remove, Database, query, orderByChild, equalTo} from 'firebase/database'
+import { app } from "../../firebase/firebase";
 
 export default function AddToDoList() {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!localStorage.getItem("email")) {
+      toast.info("Plz sing-in first!");
       navigate("/signin");
     }
   }, []);
@@ -15,30 +19,34 @@ export default function AddToDoList() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [email, setEmail] = useState(localStorage.getItem("email"));
+  const [show, setShow] = useState(false);
 
   const data = { title, description, email };
+  const emmai= localStorage.getItem('email');
+  const sp= emmai.split('.')
+  console.log(sp);
 
-  const addtodolist = async (e) => {
+  const addtodolist = (e) => {
     e.preventDefault();
 
-   await fetch("https://newone-newonetodo.onrender.com/todolists", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    setShow(true);
+
+    const db=getDatabase(app);
+    const newRef=push(ref(db,'List/Add/'+sp[0]));
+    set(newRef,{
+        
+        title:title,
+        description:description,
+        email:email,
+        status:null
+    }).then(()=>{
+        toast.success("Data added successfully");
+        setTitle("");
+        setDescription("");
+        navigate('/all');
+    }).catch((errer)=>{
+        toast.error("errer");
     })
-      .then((value) => {
-        value.json().then((result) => {
-          console.log(result);
-          alert("Todo list added successfully");
-          navigate("/all");
-        });
-      })
-      .catch((errer) => {
-        console.log(errer);
-      });
   };
 
   return (
@@ -52,7 +60,9 @@ export default function AddToDoList() {
                 className="card-header text-center bg-white text-dark"
                 style={{ border: "none" }}
               >
-                <h3><FaEdit/> Todo</h3>
+                <h3>
+                  <FaEdit /> Todo
+                </h3>
                 <p>
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                   Deleniti eum asperiores provident corporis! Voluptates quia
@@ -98,9 +108,13 @@ export default function AddToDoList() {
                     />
                   </div>
 
-                  <button type="submit" className="btn btn-primary w-100">
-                   <FaEdit/> ADD
-                  </button>
+                  {show === false ? (
+                    <button type="submit" className="btn btn-primary w-100">
+                      <FaEdit /> ADD
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </form>
               </div>
             </div>
