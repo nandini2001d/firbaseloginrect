@@ -3,7 +3,18 @@ import Navigation from "../Navigation/Navigation";
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
-import {getDatabase,ref,set,push, get, remove, Database, query, orderByChild, equalTo} from 'firebase/database'
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  get,
+  remove,
+  Database,
+  query,
+  orderByChild,
+  equalTo,
+} from "firebase/database";
 import { app } from "../../firebase/firebase";
 
 export default function AddToDoList() {
@@ -22,8 +33,8 @@ export default function AddToDoList() {
   const [show, setShow] = useState(false);
 
   const data = { title, description, email };
-  const emmai= localStorage.getItem('email');
-  const sp= emmai.split('.')
+  const emmai = localStorage.getItem("email");
+  const sp = emmai.split(".");
   console.log(sp);
 
   const addtodolist = (e) => {
@@ -31,22 +42,23 @@ export default function AddToDoList() {
 
     setShow(true);
 
-    const db=getDatabase(app);
-    const newRef=push(ref(db,'List/Add/'+sp[0]));
-    set(newRef,{
-        
-        title:title,
-        description:description,
-        email:email,
-        status:null
-    }).then(()=>{
+    const db = getDatabase(app);
+    const newRef = push(ref(db, "List/Add/" + sp[0]));
+    set(newRef, {
+      title: title,
+      description: description,
+      email: email,
+      status: null,
+    })
+      .then(() => {
         toast.success("Data added successfully");
         setTitle("");
         setDescription("");
-        navigate('/all');
-    }).catch((errer)=>{
+        navigate("/all");
+      })
+      .catch((errer) => {
         toast.error("errer");
-    })
+      });
   };
 
   return (
@@ -55,7 +67,7 @@ export default function AddToDoList() {
       <div className="container mt-5">
         <div className="row">
           <div className="col-lg-6 offset-lg-3 col-sm-12">
-            <div className="card p-5" style={{ border: "none" }}>
+            <div className="card p-3" style={{ border: "none" }}>
               <div
                 className="card-header text-center bg-white text-dark"
                 style={{ border: "none" }}
@@ -87,6 +99,7 @@ export default function AddToDoList() {
                       name="title"
                       placeholder="Title"
                       value={title}
+                      style={{ border: "1px solid black"}}
                       onChange={(e) => {
                         setTitle(e.target.value);
                       }}
@@ -95,17 +108,19 @@ export default function AddToDoList() {
                   </div>
 
                   <div className="mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="description"
+                    <textarea
+                      class="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="6"
+                      required
                       placeholder="Description"
+                      style={{ border: "1px solid black", resize: "none" }}
+                      name="description"
                       value={description}
                       onChange={(e) => {
                         setDescription(e.target.value);
                       }}
-                      required
-                    />
+                    ></textarea>
                   </div>
 
                   {show === false ? (
