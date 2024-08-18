@@ -14,7 +14,10 @@ export default function SignIn() {
   useEffect(()=>{
     if (localStorage.getItem("email")) {
       navigate("/");
-      toast.info("Plz login logout first!");
+      toast.info("Plz login logout first!",
+        {
+          toastId:"information1"
+        });
     }
   },[])
 
@@ -29,9 +32,15 @@ export default function SignIn() {
       const login = await signInWithEmailAndPassword(auth, email, password);
       localStorage.setItem("email", login.user.email);
       navigate("/");
-      toast.success("Sing-In Successfully!");
+      toast.success("Sing-In Successfully!",
+        {
+          toastId:"success1"
+        });
     } catch (error) {
-      toast.error("Email Id Or password Wrong!");
+      toast.error("Email Id Or password Wrong!",
+        {
+          toastId:"errer1"
+        });
     }
   };
   

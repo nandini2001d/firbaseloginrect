@@ -13,7 +13,10 @@ export default function SignUp() {
   useEffect(()=>{
     if (localStorage.getItem("email")) {
       navigate("/");
-      toast.info("Plz login logout first!");
+      toast.info("Plz login logout first!",
+        {
+          toastId:"information1"
+        });
     }
   },[])
 
@@ -25,11 +28,17 @@ export default function SignUp() {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("Sing-Up Sucessfully Plz Sign-In!");
+      toast.success("Sing-Up Sucessfully Plz Sign-In!",
+        {
+          toastId:"success1"
+        });
       navigate('/signin')
       
     } catch (error) {
-      toast.error("Email id is already registerd!");
+      toast.error("Email id is already registerd!",
+        {
+          toastId:"errer1"
+        });
     }
   };
 

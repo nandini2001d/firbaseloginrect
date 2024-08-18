@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
-import {getDatabase,ref,set,push, get, remove, Database, query, orderByChild, equalTo} from 'firebase/database'
+import {getDatabase,ref,set,get, remove, query, orderByChild, equalTo} from 'firebase/database'
 import { app } from "../../firebase/firebase";
 
 export default function AllToDoList() {
@@ -14,18 +14,35 @@ export default function AllToDoList() {
 
   useEffect(() => {
     if (!localStorage.getItem("email")) {
-      toast.info("Plz sing-in first!");
+      toast.info("Plz sing-in first!",
+        {
+          toastId:"information1"
+        }
+      );
       navigate("/signin");
     }
 
     try {
       if (title === "") {
-        getalldata();
+        toast.promise(
+          getalldata(),
+          {
+            pending:"Please wait!",
+            success:"Your todo-list!",
+            error:"Somthing wets wrong!"
+          },
+          {
+            toastId:"success1"
+          }
+        )
       } else if (title) {
         seachbytitle();
       }
     } catch (error) {
-      toast.error("Somthing wents wrong!,logout and login again");
+      toast.error("Somthing wents wrong!,logout and login again",
+        {
+          toastId:"success1"
+        });
     }
   }, []);
 
@@ -88,14 +105,23 @@ export default function AllToDoList() {
                 description:targetObject.description,
                 status:icode
             }).then(()=>{
-                toast.success("Data updated successfully");
+                toast.success("Data updated successfully",
+                  {
+                    toastId:"success1"
+                  });
                 getalldata();
             }).catch((errer)=>{
-              toast.error("errer");
+              toast.error("errer",
+                {
+                  toastId:"errer1"
+                });
             })
         }
         else{
-            toast.error("errer");
+            toast.error("errer",
+              {
+                toastId:"errer1"
+              });
         }
   };
 
@@ -127,7 +153,10 @@ export default function AllToDoList() {
     const newRef=ref(db,`List/Add/${sp[0]}/${id}`);
     await remove(newRef);
       getalldata();
-      toast.success("Data delete successfully");
+      toast.success("Data delete successfully",
+        {
+          toastId:"sucess1"
+        });
 
   };
 

@@ -8,12 +8,6 @@ import {
   ref,
   set,
   push,
-  get,
-  remove,
-  Database,
-  query,
-  orderByChild,
-  equalTo,
 } from "firebase/database";
 import { app } from "../../firebase/firebase";
 
@@ -22,7 +16,10 @@ export default function AddToDoList() {
 
   useEffect(() => {
     if (!localStorage.getItem("email")) {
-      toast.info("Plz sing-in first!");
+      toast.info("Plz sing-in first!",
+        {
+          toastId:"information1"
+        });
       navigate("/signin");
     }
   }, []);
@@ -51,13 +48,19 @@ export default function AddToDoList() {
       status: null,
     })
       .then(() => {
-        toast.success("Data added successfully");
+        toast.success("Data added successfully",
+          {
+            toastId:"sucess1"
+          });
         setTitle("");
         setDescription("");
         navigate("/all");
       })
       .catch((errer) => {
-        toast.error("errer");
+        toast.error("errer",
+          {
+            toastId:"errer1"
+          });
       });
   };
 
@@ -67,7 +70,7 @@ export default function AddToDoList() {
       <div className="container mt-5">
         <div className="row">
           <div className="col-lg-6 offset-lg-3 col-sm-12">
-            <div className="card p-3" style={{ border: "none" }}>
+            <div className="card p-2" style={{ border: "none" }}>
               <div
                 className="card-header text-center bg-white text-dark"
                 style={{ border: "none" }}
