@@ -34,7 +34,12 @@ export default function AddToDoList() {
 
   const addtodolist = (e) => {
     e.preventDefault();
-
+    e.preventDefault();
+    toast.promise(addtodolist,{
+      pending:"Please wait todo-list adding!"
+    },{
+      toastId:"pending1"
+    })
     setShow(true);
      
     const emmai = localStorage.getItem("email");
