@@ -29,14 +29,15 @@ export default function AddToDoList() {
   const [email, setEmail] = useState(localStorage.getItem("email"));
   const [show, setShow] = useState(false);
 
-  const data = { title, description, email };
+ // const data = { title, description, email };
  
 
-  const addtodolist = (e) => {
+  const addtodolist = async (e) => {
     e.preventDefault();
     e.preventDefault();
+
     toast.promise(addtodolist,{
-      pending:"Please wait todo-list adding!"
+      pending:"Please wait todo-list is adding!"
     },{
       toastId:"pending1"
     })
@@ -46,17 +47,17 @@ export default function AddToDoList() {
     const sp = emmai.split(".");
     const db = getDatabase(app);
     const newRef = push(ref(db, "List/Add/" + sp[0]));
-    set(newRef, {
+    await set(newRef, {
       title: title,
       description: description,
       email: email,
       status: null,
     })
       .then(() => {
-        toast.success("Data added successfully",
-          {
-            toastId:"sucess1"
-          });
+        // toast.success("Data added successfully",
+        //   {
+        //     toastId:"sucess1"
+        //   });
         setTitle("");
         setDescription("");
         navigate("/all");
